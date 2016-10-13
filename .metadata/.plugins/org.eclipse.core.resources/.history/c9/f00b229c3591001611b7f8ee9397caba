@@ -1,0 +1,6 @@
+
+public class Stock {
+	String stockSymbol;
+	int volatility;
+	
+}

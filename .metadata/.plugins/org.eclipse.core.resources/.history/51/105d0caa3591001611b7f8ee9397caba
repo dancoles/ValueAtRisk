@@ -1,0 +1,17 @@
+
+public class Stock {
+	String stockSymbol;
+	int volatility;
+	
+	public Stock(String stockSymbol) {
+		this.stockSymbol = stockSymbol;
+	}
+	
+	public String getSymbol() {
+		return this.stockSymbol;
+	}
+	
+	public int getVolatility() {
+		return this.volatility;
+	}
+}

@@ -1,0 +1,17 @@
+import java.util.ArrayList;
+
+public class portfolio {
+	ArrayList<Stock> PF;
+
+	public portfolio() {
+		PF = new ArrayList<Stock>();
+	}
+
+	public ArrayList<Stock> getPF() {
+		return this.PF;
+	}
+	
+	public boolean addToPF(Stock myStock) {
+		return this.PF.add(myStock);
+	}
+}
