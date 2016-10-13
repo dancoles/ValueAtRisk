@@ -1,0 +1,10 @@
+import java.util.Calendar;
+
+public class prices {
+	Calendar date;
+	float close;
+	public prices(Calendar date, float close) {
+		this.date = date;
+		this.close = close;
+	}
+}
