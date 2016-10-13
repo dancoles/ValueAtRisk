@@ -18,7 +18,7 @@ public class security {
 	}
 
 	public float getVolatility() {
-		return this.volatility; 
+		return this.volatility; //rar
 	}
 
 	public void calcVolatility() {
