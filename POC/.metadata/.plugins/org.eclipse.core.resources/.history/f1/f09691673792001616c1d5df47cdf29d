@@ -1,0 +1,10 @@
+import java.io.IOException;
+
+public class derivitive extends security {
+
+	public derivitive(String securitySymbol) throws IOException {
+		super(securitySymbol);
+		// TODO Auto-generated constructor stub
+	}
+	
+}

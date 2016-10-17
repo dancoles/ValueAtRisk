@@ -1,0 +1,37 @@
+
+import java.io.FileDescriptor;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.*;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class dataRetrieval {
+
+	public static void main(String[] args) throws IOException {
+		Scanner in = new Scanner(System.in);
+		String stockSym = null;
+
+		System.out.println(
+				"Enter stock symbols for stocks in portfolio. Type 'END' when all stocks in your portfolio are added");
+
+		portfolio myPF = new portfolio();
+		
+		myPF.addToPF(Microsoft);
+		// System.out.println(Microsoft.getSymbol());
+
+		for (int n = 0; n < 2; n++) {
+			
+			stockSym = in.nextLine();
+			security nextSec = new security(stockSym);
+			myPF.addToPF(nextSec);
+		}
+
+		in.close();
+
+	}
+
+}

@@ -1,0 +1,27 @@
+
+import java.io.IOException;
+import java.util.Calendar;
+import java.util.Scanner;
+
+public class dataRetrieval {
+
+	public static void main(String[] args) throws IOException {
+		portfolio myPF = new portfolio();
+		Scanner in = new Scanner(System.in);
+		String stockSym = null;
+
+		System.out.println(
+				"Enter stock symbols for stocks in portfolio. Type 'END' when all stocks in your portfolio are added");
+
+		for (int n = 0; n < 2; n++) {
+			stockSym = in.nextLine();
+			security nextSec = new security(stockSym);
+			myPF.addToPF(nextSec);
+		}
+		//System.out.println(myPF.getPF().get(0).getSymbol());
+		in.close();
+		Calendar test= Calendar.set(2012, 2, 2);
+		System.out.println(myPF.getPF().get(1).getClosePriceForDate(test));
+	}
+
+}

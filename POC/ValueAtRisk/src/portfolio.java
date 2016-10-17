@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public class portfolio {
 	ArrayList<security> PF;
-	float VaR;
+	double VaR;
 
 	public portfolio() {
 		PF = new ArrayList<security>();
@@ -13,12 +13,13 @@ public class portfolio {
 		return this.PF;
 	}
 
-	public float getVar() {
+	public double getVar() {
 		return this.VaR;
 	}
 
 	public boolean addToPF(security mysecurity) {
-		return this.PF.add(mysecurity); // returns true if security successfully added
+		return this.PF.add(mysecurity); // returns true if security successfully
+										// added
 										// // to PF
 	}
 

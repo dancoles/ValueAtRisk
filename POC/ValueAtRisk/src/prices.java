@@ -1,18 +1,18 @@
 
 public class prices {
-	float open;
-	float close;
+	double open;
+	double close;
 
-	public prices(float open, float close) {
+	public prices(double open, double close) {
 		this.open = open;
 		this.close = close;
 	}
 
-	public float getClose() {
+	public double getClose() {
 		return this.close;
 	}
 
-	public float getOpen() {
+	public double getOpen() {
 		return this.open;
 	}
 }
