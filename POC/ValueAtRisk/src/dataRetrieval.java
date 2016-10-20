@@ -15,7 +15,7 @@ public class dataRetrieval {
 
 		for (int n = 0; n < 2; n++) {
 			stockSym = in.nextLine().toUpperCase();
-			security nextSec = new security(stockSym);
+			security nextSec = new security(stockSym, 5);
 			myPF.addToPF(nextSec);
 		}
 
@@ -32,9 +32,12 @@ public class dataRetrieval {
 		 */
 
 		for (security sec : myPF.getPF()) {
-			System.out.println("Symbol: " + sec.getSymbol() + "\n" + "Volatility: " + sec.getVolatility());
+			System.out.println("Symbol: " + sec.getSymbol() + "\n" + "Daily Volatility: " + String.format("%.2f",sec.getDailyVolatility() * 100) + "%");
+			System.out.println("Annual Volatility: " + String.format("%.2f",sec.getAnnualVolatility() * 100) + "%");
 		}
-
+		//Utilities.calcVaR(10, 95, 10);
+		System.out.println("Total volatility of portfolio: " + String.format("%.2f",myPF.getDailyVolatility() * 100) + "%");
+		
 	}
 
 }

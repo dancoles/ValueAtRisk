@@ -1,7 +1,7 @@
 
 public class prices {
-	double open;
-	double close;
+	private double open;
+	private double close;
 
 	public prices(double open, double close) {
 		this.open = open;

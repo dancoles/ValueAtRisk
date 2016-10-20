@@ -2,16 +2,18 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="double" key="selection"/>
+		<item value="dailyVolatility" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="volatility"/>
 			<item value="float"/>
 			<item value="Stock"/>
 		</list>
 		<list key="replacehistory">
+			<item value="dailyVolatility"/>
 			<item value="double"/>
 			<item value="security"/>
 		</list>

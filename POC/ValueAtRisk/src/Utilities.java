@@ -21,7 +21,7 @@ public class Utilities {
 		int month = cal.get(Calendar.MONTH);
 		int day = cal.get(Calendar.DATE);
 		cal.roll(Calendar.MONTH, false);
-		int prevMonth =cal.get(Calendar.MONTH);
+		int prevMonth = cal.get(Calendar.MONTH);
 		System.out.println("Retrieving data..");
 
 		String retStr = ("http://ichart.finance.yahoo.com/table.csv?s=" + Symbol + "&d=" + month + "&e=" + day + "&f="
@@ -56,9 +56,15 @@ public class Utilities {
 			} catch (IOException | ParseException e) {
 				System.out.println("Could not load data");
 			}
-
+			rbc.close();
+			
 			fos.flush();
 			fos.close();
+			
+			String path = dat.getCanonicalPath();
+			File filePath = new File(path);
+			//System.out.println(path);
+			filePath.delete();
 
 			System.out.println("Data retrieval complete");
 
@@ -70,7 +76,7 @@ public class Utilities {
 		return temp;
 	}
 
-	public static double calcVolatility(HashMap<Calendar, prices> historicalPrices) {
+	public static double calcVolatilitySD(HashMap<Calendar, prices> historicalPrices) {
 		double sum = 0;
 		for (prices K : historicalPrices.values()) {
 			sum = sum + K.getClose();
@@ -88,6 +94,41 @@ public class Utilities {
 		double volatility = Math.sqrt(square);
 
 		return volatility;
+	}
+
+	public static double calcDailyVolatilityRet(HashMap<Calendar, prices> historicalPrices) {
+		double sReturn;
+		double dailyVolatility = 0;
+		double totalReturn = 0;
+		double meanReturn;
+		Calendar[] dates = historicalPrices.keySet().toArray(new Calendar[historicalPrices.size()]);
+
+		for (int i = 1; i < dates.length; i++) {
+
+			sReturn = Math
+					.log(historicalPrices.get(dates[i]).getClose() / historicalPrices.get(dates[i - 1]).getClose());
+			totalReturn = totalReturn + sReturn;
+		}
+		meanReturn = totalReturn / historicalPrices.size();
+
+		double devFromMean;
+		double totalDev = 0;
+		for (int i = 1; i < dates.length; i++) {
+			sReturn = Math
+					.log(historicalPrices.get(dates[i]).getClose() / historicalPrices.get(dates[i - 1]).getClose());
+			devFromMean = sReturn - meanReturn;
+			totalDev = (devFromMean * devFromMean) + totalDev;
+		}
+
+		double meanVariance = totalDev / (historicalPrices.size() - 1);
+
+		dailyVolatility = Math.sqrt(meanVariance);
+		return dailyVolatility;
+
+	}
+
+	public static double calcVaR(double volatility, int confLevel, int period) {
+		return 0;
 	}
 
 }

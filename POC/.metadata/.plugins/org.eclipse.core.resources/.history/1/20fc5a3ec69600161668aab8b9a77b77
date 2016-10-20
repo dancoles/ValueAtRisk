@@ -1,0 +1,58 @@
+
+import java.io.IOException;
+import java.util.Calendar;
+import java.util.HashMap;
+
+public class security {
+	private String securitySymbol;
+	private double dailyVolatility;
+	private double VaR;
+	private HashMap<Calendar, prices> historicalPrices;
+	private int quantity;
+
+	public security(String securitySymbol, int quantity) throws IOException {
+		this.securitySymbol = securitySymbol;
+		this.quantity = quantity;
+		this.historicalPrices = new HashMap<Calendar, prices>();
+		loadData();
+		calcDailyVolatility();
+	}
+
+
+	public double getVaR() {
+		return this.VaR;
+	}
+
+	public String getSymbol() {
+		return this.securitySymbol;
+	}
+
+	public int getQuantity() {
+		return this.quantity;
+	}
+
+	public double getDailyVolatility() {
+		return this.dailyVolatility;
+	}
+	
+	public double getAnnualVolatility() {
+		return this.dailyVolatility * Math.sqrt(63);
+	}
+
+	protected void calcDailyVolatility() {
+		this.dailyVolatility = Utilities.calcDailyVolatilityRet(this.historicalPrices);
+	}
+
+	public double getClosePriceForDate(Calendar date) {
+		return this.historicalPrices.get(date).getClose();
+	}
+
+	public double getOpenPriceForDate(Calendar date) {
+		return this.historicalPrices.get(date).getOpen();
+	}
+
+	protected void loadData() throws IOException {
+		this.historicalPrices = Utilities.DLData(this.securitySymbol);
+	}
+
+}

@@ -1,7 +1,0 @@
-import java.util.ArrayList;
-
-public class portfolio {
-	public portfolio() {
-		ArrayList<Stock> primPortfolio = new ArrayList<Stock>;
-	}
-}
