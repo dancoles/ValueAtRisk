@@ -1,23 +1,26 @@
 
 import java.io.IOException;
 import java.util.Calendar;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
+import flanagan.analysis.Stat;
 
 public class security {
 	private String securitySymbol;
 	private double dailyVolatility;
 	private double VaR;
-	private HashMap<Calendar, prices> historicalPrices;
+	private double EWMAVolatility;
+	private LinkedHashMap<Calendar, prices> historicalPrices;
 	private int quantity;
 
 	public security(String securitySymbol, int quantity) throws IOException {
 		this.securitySymbol = securitySymbol;
 		this.quantity = quantity;
-		this.historicalPrices = new HashMap<Calendar, prices>();
+		this.historicalPrices = new LinkedHashMap<Calendar, prices>();
 		loadData();
 		calcDailyVolatility();
-	}
+		calcDailyVolatilityEWMA();
 
+	}
 
 	public double getVaR() {
 		return this.VaR;
@@ -34,13 +37,19 @@ public class security {
 	public double getDailyVolatility() {
 		return this.dailyVolatility;
 	}
-	
+
 	public double getAnnualVolatility() {
 		return this.dailyVolatility * Math.sqrt(252);
 	}
 
+	public double getEWMAVolatility() {
+		return this.EWMAVolatility;
+	}
+
 	protected void calcDailyVolatility() {
+		System.out.println("Calculating volatility..");
 		this.dailyVolatility = Utilities.calcDailyVolatilityRet(this.historicalPrices);
+		System.out.println("Complete.");
 	}
 
 	public double getClosePriceForDate(Calendar date) {
@@ -53,6 +62,15 @@ public class security {
 
 	protected void loadData() throws IOException {
 		this.historicalPrices = Utilities.DLData(this.securitySymbol);
+	}
+
+	public double calcVaRVariCov(double confLevel, int period) {
+		//System.out.println(-Stat.gaussianInverseCDF(1 - (confLevel / 100)));
+		return -Stat.gaussianInverseCDF(1 - (confLevel / 100)) * this.dailyVolatility * Math.sqrt(period);
+	}
+
+	protected void calcDailyVolatilityEWMA() {
+		this.EWMAVolatility = Utilities.calcDailyVolatilityEWMA(this.historicalPrices);
 	}
 
 }

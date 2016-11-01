@@ -9,13 +9,17 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+
+import javax.xml.crypto.dsig.CanonicalizationMethod;
 
 public class Utilities {
 
-	public static HashMap<Calendar, prices> DLData(String Symbol) throws IOException {
-		HashMap<Calendar, prices> temp = new HashMap<Calendar, prices>();
+	public static LinkedHashMap<Calendar, prices> DLData(String Symbol) throws IOException {
+		LinkedHashMap<Calendar, prices> temp = new LinkedHashMap<Calendar, prices>();
 		Calendar cal = Calendar.getInstance();
 		int year = cal.get(Calendar.YEAR);
 		int month = cal.get(Calendar.MONTH);
@@ -25,7 +29,7 @@ public class Utilities {
 		System.out.println("Retrieving data..");
 
 		String retStr = ("http://ichart.finance.yahoo.com/table.csv?s=" + Symbol + "&d=" + month + "&e=" + day + "&f="
-				+ year + "&g=d&a=" + prevMonth + "&b=" + day + "&c=" + (year) + "&ignore=.csv");
+				+ year + "&g=d&a=" + month + "&b=" + (day) + "&c=" + (year - 1) + "&ignore=.csv");
 
 		URL url = null;
 		System.out.println("Adding data to local resource..");
@@ -57,13 +61,13 @@ public class Utilities {
 				System.out.println("Could not load data");
 			}
 			rbc.close();
-			
+
 			fos.flush();
 			fos.close();
-			
+
 			String path = dat.getCanonicalPath();
 			File filePath = new File(path);
-			//System.out.println(path);
+			// System.out.println(path);
 			filePath.delete();
 
 			System.out.println("Data retrieval complete");
@@ -76,7 +80,7 @@ public class Utilities {
 		return temp;
 	}
 
-	public static double calcVolatilitySD(HashMap<Calendar, prices> historicalPrices) {
+	public static double calcVolatilitySD(LinkedHashMap<Calendar, prices> historicalPrices) {
 		double sum = 0;
 		for (prices K : historicalPrices.values()) {
 			sum = sum + K.getClose();
@@ -96,18 +100,22 @@ public class Utilities {
 		return volatility;
 	}
 
-	public static double calcDailyVolatilityRet(HashMap<Calendar, prices> historicalPrices) {
+	public static double calcDailyVolatilityRet(LinkedHashMap<Calendar, prices> historicalPrices) {
 		double sReturn;
 		double dailyVolatility = 0;
 		double totalReturn = 0;
 		double meanReturn;
 		Calendar[] dates = historicalPrices.keySet().toArray(new Calendar[historicalPrices.size()]);
+		Collections.reverse(Arrays.asList(dates));
 
 		for (int i = 1; i < dates.length; i++) {
 
 			sReturn = Math
 					.log(historicalPrices.get(dates[i]).getClose() / historicalPrices.get(dates[i - 1]).getClose());
 			totalReturn = totalReturn + sReturn;
+
+			// System.out.println(historicalPrices.get(dates[i]).getClose());
+
 		}
 		meanReturn = totalReturn / historicalPrices.size();
 
@@ -127,8 +135,49 @@ public class Utilities {
 
 	}
 
-	public static double calcVaR(double volatility, int confLevel, int period) {
-		return 0;
+	public static double calcDailyVolatilityEWMA(LinkedHashMap<Calendar, prices> historicalPrices) {
+		double sReturn;
+		double dailyVolatility = 0;
+		double sqrReturn;
+		double EWMAVariance = 0;
+		double lambda = 0.94;
+		double weight = 1 - 0.94;
+
+		Calendar[] dates = historicalPrices.keySet().toArray(new Calendar[historicalPrices.size()]);
+
+		for (int i = 1; i < dates.length; i++) {
+
+			sReturn = Math
+					.log(historicalPrices.get(dates[i]).getClose() / historicalPrices.get(dates[i - 1]).getClose());
+
+			sqrReturn = (sReturn * sReturn) * weight;
+			weight = weight * lambda;
+
+			EWMAVariance = EWMAVariance + sqrReturn;
+		}
+
+		dailyVolatility = Math.sqrt(EWMAVariance);
+
+		return dailyVolatility;
+
 	}
 
+	public static double calcDailyVolatilityGARCH(LinkedHashMap<Calendar, prices> historicalPrices) {
+		double alpha = 0.05;
+		double beta = 0.9;
+		double gamma = 0.05;
+		double sqrReturn;
+		double sReturn;
+		Calendar[] dates = historicalPrices.keySet().toArray(new Calendar[historicalPrices.size()]);
+
+		for (int i = 1; i < dates.length; i++) {
+
+			sReturn = Math
+					.log(historicalPrices.get(dates[i]).getClose() / historicalPrices.get(dates[i - 1]).getClose());
+
+			sqrReturn = (sReturn * sReturn);
+		}
+		return 0;
+
+	}
 }
